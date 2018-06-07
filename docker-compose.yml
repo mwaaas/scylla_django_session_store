@@ -13,6 +13,9 @@ services:
 
   app:
     build: .
+    depends_on:
+      - scylla
+      - cassandra
     volumes:
       - ./:/usr/src/app
 
