@@ -20,7 +20,7 @@ do
         --build-arg DJANGO_VERSION=${django_version} app
     for host in "${supported_db_host[@]}"
     do
-        find . -name \*.pyc -delete
+        sudo find . -name \*.pyc -delete
         echo "db host: ${host}"
         docker-compose run -e SCYLLA_HOST=${host} app python manage.py test
     done
