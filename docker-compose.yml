@@ -16,6 +16,8 @@ services:
     depends_on:
       - scylla
       - cassandra
+    environment:
+      - SCYLLA_HOST=scylla
     volumes:
       - ./:/usr/src/app
 

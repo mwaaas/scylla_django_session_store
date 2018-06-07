@@ -14,6 +14,7 @@ from scylla_sessions.sessions import (
 from django.utils import timezone
 from django.core import management
 import time
+from django import VERSION
 
 
 class SessionTestsMixin:
@@ -379,3 +380,8 @@ class ScyllaSessionTests(SessionTestsMixin, TestCase):
 
     def test_session_save_does_not_resurrect_session_logged_out_in_other_context(self):
         pass
+
+    def test_decode_failure_logged_to_security(self):
+        if VERSION[0] == 2:
+            super(ScyllaSessionTests, self).test_decode_failure_logged_to_security()
+
