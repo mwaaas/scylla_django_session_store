@@ -1,7 +1,9 @@
 ARG PYTHON_IMAGE_TAG=3.6.5-alpine3.7
 FROM python:${PYTHON_IMAGE_TAG}
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/app \
+    && apk update \
+    && apk add bash
 
 WORKDIR /usr/src/app
 
