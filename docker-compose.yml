@@ -1,0 +1,19 @@
+version: '3'
+services:
+  scylla:
+    image: scylladb/scylla:2.1.3
+    command: --experimental 1
+    ports:
+      - 9042:9042
+
+  cassandra:
+    image: cassandra:2.2.12
+    ports:
+      - 9042
+
+  app:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+
+

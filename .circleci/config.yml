@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: docker setup
+          command: |
+            docker info
+#            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker-compose run --entrypoint='echo "done setting up docker"' app
+
+      - run:
+          name: Running tests
+          command: |
+            ./run_tests.sh
