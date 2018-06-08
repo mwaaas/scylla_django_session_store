@@ -1,3 +1,5 @@
 .venv
 .idea
 __pycache__
+dist
+scylla_django_session_store.egg-info

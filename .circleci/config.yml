@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     machine:
       image: circleci/classic:201708-01
 
@@ -16,6 +16,38 @@ jobs:
             docker-compose run --entrypoint='echo "done setting up docker"' app
 
       - run:
-          name: Running tests
+          name: Running for differnt versions
           command: |
             ./run_tests.sh
+      - run:
+          name: default tests
+          command: |
+            docker-compose run app bash -c 'coverage run --omit=*test*,*ven* manage.py test && bash <(curl -s https://codecov.io/bash) && python-codacy-coverage -r coverage.xml'
+
+  deploy:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: release
+          commands:
+            - docker-compose run --no-deps -e PYPI_PASSWORD=$PYPI_PASSWORD -e PYPI_USER=$PYPI_USER -e VERSION=$CIRCLE_TAG app bash -c 'printf "[distutils]\nindex-servers = pypi \n[pypi]\nusername:$PYPI_USER\npassword:$PYPI_PASSWORD" > ~/.pypirc && python setup.py sdist upload'
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+          requires:
+            - test
