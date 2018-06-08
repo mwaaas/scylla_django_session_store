@@ -1,4 +1,9 @@
 0.0.1
+========
+Feature
+    - adding cassandra as dependency of this package
+
+0.0.1
 =========
 
 First major version upgrade
