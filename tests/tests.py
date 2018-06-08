@@ -15,6 +15,13 @@ from django.utils import timezone
 from django.core import management
 import time
 from django import VERSION
+import pickle as pypickle
+import six
+
+if six.PY3:
+    import pickle as cpickle
+else:
+    import cPickle as cpickle
 
 
 class SessionTestsMixin:
@@ -385,3 +392,16 @@ class ScyllaSessionTests(SessionTestsMixin, TestCase):
         if VERSION[0] == 2:
             super(ScyllaSessionTests, self).test_decode_failure_logged_to_security()
 
+    def test_pickle_dump(self):
+
+        self.assertDictEqual(self.session.__dict__,
+                             pypickle.loads(
+                                 pypickle.dumps(self.session, 2)
+                             ).__dict__)
+
+        self.assertDictEqual(
+            self.session.__dict__,
+            cpickle.loads(
+                cpickle.dumps(self.session, 2)
+            ).__dict__
+        )
