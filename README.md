@@ -1,3 +1,9 @@
+<a href="https://codecov.io/gh/mwaaas/scylla_django_session_store">
+  <img src="https://codecov.io/gh/mwaaas/scylla_django_session_store/branch/master/graph/badge.svg" />
+</a>
+<a class="badge-align" href="https://www.codacy.com/app/francismwangi152/scylla_django_session_store?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mwaaas/scylla_django_session_store&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/9309a2b02a934da0854fb53a4621d705"/></a>
+
+
 django-cassandra-sessions
 =========================
 
