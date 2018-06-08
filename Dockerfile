@@ -3,7 +3,7 @@ FROM python:${PYTHON_IMAGE_TAG}
 
 RUN mkdir -p /usr/src/app \
     && apk update \
-    && apk add bash
+    && apk add bash curl
 
 WORKDIR /usr/src/app
 
