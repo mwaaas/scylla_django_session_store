@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test:
+  default_test:
     machine:
       image: circleci/classic:201708-01
 
@@ -16,13 +16,89 @@ jobs:
             docker-compose run --entrypoint='echo "done setting up docker"' app
 
       - run:
-          name: Running for differnt versions
-          command: |
-            ./run_tests.sh
-      - run:
           name: default tests
           command: |
             docker-compose run app bash -c 'coverage run --omit=*test*,*ven* manage.py test && bash <(curl -s https://codecov.io/bash) && python-codacy-coverage -r coverage.xml'
+
+  test_python_2.7.15-alpine3.7_and_django_1.11.1:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: docker setup
+          command: |
+            docker info
+            docker-compose run --entrypoint='echo "done setting up docker"' app
+
+      - run:
+          name: Running for python 2.7.15-alpine3.7 and django 1.11.1
+          command: |
+            ./run_tests.sh 2.7.15-alpine3.7 1.11.1
+
+  test_python_2.7.15-alpine3.7_and_django_2.0.6:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: docker setup
+          command: |
+            docker info
+            docker-compose run --entrypoint='echo "done setting up docker"' app
+
+      - run:
+          name: Running for python 2.7.15-alpine3.7 and django 2.0.6
+          command: |
+            ./run_tests.sh 2.7.15-alpine3.7 2.0.6
+
+  test_python_3.6.5-alpine3.7_and_django_1.11.1:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: docker setup
+          command: |
+            docker info
+            docker-compose run --entrypoint='echo "done setting up docker"' app
+
+      - run:
+          name: Running for python 3.6.5-alpine3.7 and django 1.11.1
+          command: |
+            ./run_tests.sh 2.7.15-alpine3.7 1.11.1
+
+  test_python_3.6.5-alpine3.7_and_django_2.0.6:
+    machine:
+      image: circleci/classic:201708-01
+
+    working_directory: ~/session_store
+
+    steps:
+      - checkout
+
+      - run:
+          name: docker setup
+          command: |
+            docker info
+            docker-compose run --entrypoint='echo "done setting up docker"' app
+
+      - run:
+          name: Running for python 3.6.5-alpine3.7 and django 2.0.6
+          command: |
+            ./run_tests.sh 2.7.15-alpine3.7 2.0.6
 
   deploy:
     machine:
@@ -42,7 +118,7 @@ workflows:
   version: 2
   test_and_deploy:
     jobs:
-      - test
+      - default_test
       - deploy:
           filters:
             branches:
@@ -50,4 +126,8 @@ workflows:
             tags:
               only: /^v*/
           requires:
-            - test
+            - default_test
+            - test_python_3.6.5-alpine3.7_and_django_2.0.6
+            - test_python_3.6.5-alpine3.7_and_django_1.11.1
+            - test_python_2.7.15-alpine3.7_and_django_2.0.6
+            - test_python_2.7.15-alpine3.7_and_django_1.11.1
