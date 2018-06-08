@@ -119,6 +119,10 @@ workflows:
   test_and_deploy:
     jobs:
       - default_test
+      - test_python_3.6.5-alpine3.7_and_django_2.0.6
+      - test_python_3.6.5-alpine3.7_and_django_1.11.1
+      - test_python_2.7.15-alpine3.7_and_django_2.0.6
+      - test_python_2.7.15-alpine3.7_and_django_1.11.1
       - deploy:
           filters:
             branches:
@@ -127,7 +131,3 @@ workflows:
               only: /^v*/
           requires:
             - default_test
-            - test_python_3.6.5-alpine3.7_and_django_2.0.6
-            - test_python_3.6.5-alpine3.7_and_django_1.11.1
-            - test_python_2.7.15-alpine3.7_and_django_2.0.6
-            - test_python_2.7.15-alpine3.7_and_django_1.11.1
