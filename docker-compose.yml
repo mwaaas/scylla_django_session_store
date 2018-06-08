@@ -20,5 +20,6 @@ services:
       - SCYLLA_HOST=scylla
     volumes:
       - ./:/usr/src/app
+      - ~/.pypirc:/root/.pypirc
 
 
