@@ -1,3 +1,9 @@
+0.0.4
+========
+Feature
+    - adding command to delete all session from a table
+      To be mostly used in django tearDown tests
+
 0.0.3
 ========
 Bug fix
