@@ -17,6 +17,7 @@ import time
 from django import VERSION
 import pickle as pypickle
 import six
+from uuid import uuid4
 
 if six.PY3:
     import pickle as cpickle
@@ -372,7 +373,7 @@ class ScyllaSessionTests(SessionTestsMixin, TestCase):
         management.call_command('create_scylla_session_table')
         super(ScyllaSessionTests, self).setUp()
 
-    def test_management_command(self):
+    def test_management_command_creating_table(self):
         connection = get_connection()
         connection.execute('DROP KEYSPACE {};'.format(session_keyspace))
 
@@ -384,6 +385,27 @@ class ScyllaSessionTests(SessionTestsMixin, TestCase):
 
         self.assertTrue(cluster_keyspace.get(session_keyspace))
         self.assertTrue(cluster_keyspace.get(session_keyspace).tables.get(session_table))
+
+    def test_management_command_deleting_all_records(self):
+        # create 5 session stores.
+        session_ids = []
+        for i in range(5):
+            session = self.backend()
+            session['foo'] = 'bar'
+            session.save()
+            generated_session_id = session.session_key
+            session_ids.append(generated_session_id)
+
+            # confirm it was created and exists
+            session_test = self.backend(generated_session_id)
+            self.assertTrue(session_test.exists(session_test.session_key))
+            self.assertEqual(session_test['foo'], 'bar')
+
+        management.call_command('delete_scylla_session_records')
+
+        for session_id in session_ids:
+            session = self.backend(session_id)
+            self.assertFalse(session.exists(session.session_key))
 
     def test_session_save_does_not_resurrect_session_logged_out_in_other_context(self):
         pass
